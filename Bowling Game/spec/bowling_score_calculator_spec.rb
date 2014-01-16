@@ -48,66 +48,66 @@ describe "BowlingScoreCalculator" do
       roll_score.should == 18
     end
 
-		context "'/' occurs in one of the last three rolls" do
-			it "should return raw value of '/' when it occurs not as the last roll" do
-				score_sheet = "7/8-X352/3"
-				roll_score = BowlingScoreCalculator.get_roll_score(score_sheet, 8)
-				roll_score.should == 8
-			end
+    context "'/' occurs in one of the last three rolls" do
+      it "should return raw value of '/' when it occurs not as the last roll" do
+        score_sheet = "7/8-X352/3"
+        roll_score = BowlingScoreCalculator.get_roll_score(score_sheet, 8)
+        roll_score.should == 8
+      end
 
-			it "should return raw value of '/' when it occurs as the last roll" do
-				score_sheet = "7/8-X35X3/"
-				roll_score = BowlingScoreCalculator.get_roll_score(score_sheet, 9)
-				roll_score.should == 7
-			end
-		end
+      it "should return raw value of '/' when it occurs as the last roll" do
+        score_sheet = "7/8-X35X3/"
+        roll_score = BowlingScoreCalculator.get_roll_score(score_sheet, 9)
+        roll_score.should == 7
+      end
+    end
 
-		context "'X' occurs in one of the last three rolls" do
-			it "should return raw value of 'X' when it occurs not as the last roll" do
-				score_sheet = "7/8-X35X53"
-				roll_score = BowlingScoreCalculator.get_roll_score(score_sheet, 7)
-				roll_score.should == 10
-			end
+    context "'X' occurs in one of the last three rolls" do
+      it "should return raw value of 'X' when it occurs not as the last roll" do
+        score_sheet = "7/8-X35X53"
+        roll_score = BowlingScoreCalculator.get_roll_score(score_sheet, 7)
+        roll_score.should == 10
+      end
 
-			it "should return raw value of 'X' when it occurs as the last roll" do
-				score_sheet = "7/8-X35XXX"
-				roll_score = BowlingScoreCalculator.get_roll_score(score_sheet, 9)
-				roll_score.should == 10
-			end
-		end
+      it "should return raw value of 'X' when it occurs as the last roll" do
+        score_sheet = "7/8-X35XXX"
+        roll_score = BowlingScoreCalculator.get_roll_score(score_sheet, 9)
+        roll_score.should == 10
+      end
+    end
   end
 
-	describe "get_total_score" do
-		describe "A game without strikes or spares" do
-			it "should add up all the numbers as total score" do
-				sheet = "12345123451234512345"
-				result = BowlingScoreCalculator.get_total_score sheet
-				result.should == 60
-			end
-		end
+  describe "get_total_score" do
+    describe "A game without strikes or spares" do
+      it "should add up all the numbers as total score" do
+        sheet = "12345123451234512345"
+        result = BowlingScoreCalculator.get_total_score sheet
+        result.should == 60
+      end
+    end
 
-		describe "A game with all strikes" do
-			it "should have score of 300" do
-				sheet = "XXXXXXXXXXXX"
-				result = BowlingScoreCalculator.get_total_score sheet
-				result.should == 300
-			end
-		end
+    describe "A game with all strikes" do
+      it "should have score of 300" do
+        sheet = "XXXXXXXXXXXX"
+        result = BowlingScoreCalculator.get_total_score sheet
+        result.should == 300
+      end
+    end
 
-		describe "A game brokes player's heart" do
-			it "should have score of 90" do
-				sheet = "9-9-9-9-9-9-9-9-9-9-"
-				result = BowlingScoreCalculator.get_total_score sheet
-				result.should == 90
-			end
-		end
+    describe "A game brokes player's heart" do
+      it "should have score of 90" do
+        sheet = "9-9-9-9-9-9-9-9-9-9-"
+        result = BowlingScoreCalculator.get_total_score sheet
+        result.should == 90
+      end
+    end
 
-		describe "A game with all spares" do
-			it "should have score of 150" do
-				sheet = "5/5/5/5/5/5/5/5/5/5/5"
-				result = BowlingScoreCalculator.get_total_score sheet
-				result.should == 150
-			end
-		end
-	end
+    describe "A game with all spares" do
+      it "should have score of 150" do
+        sheet = "5/5/5/5/5/5/5/5/5/5/5"
+        result = BowlingScoreCalculator.get_total_score sheet
+        result.should == 150
+      end
+    end
+  end
 end

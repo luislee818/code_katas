@@ -1,8 +1,8 @@
 class BowlingScoreCalculator
   STRIKE = 'X'
-	SPARE = '/'
-	MISS = '-'
-	NON_BONUS_ROLLS_COUNT = 3
+  SPARE = '/'
+  MISS = '-'
+  NON_BONUS_ROLLS_COUNT = 3
 
   def self.get_total_score(score_sheet)
     i = 0
@@ -17,19 +17,19 @@ class BowlingScoreCalculator
   end
 
   def self.get_roll_score(score_sheet, i)
-		if i >= (score_sheet.size - NON_BONUS_ROLLS_COUNT)
-			return get_raw_score_for_roll(score_sheet, i)
-		end
+    if i >= (score_sheet.size - NON_BONUS_ROLLS_COUNT)
+      return get_raw_score_for_roll(score_sheet, i)
+    end
 
     value = score_sheet[i]
 
     if value == SPARE
-			get_raw_score_for_roll(score_sheet, i) +
-				get_raw_score_for_roll(score_sheet, i + 1)
-		elsif value == STRIKE
-			get_raw_score_for_roll(score_sheet, i) +
-				get_raw_score_for_roll(score_sheet, i + 1) +
-				get_raw_score_for_roll(score_sheet, i + 2)
+      get_raw_score_for_roll(score_sheet, i) +
+        get_raw_score_for_roll(score_sheet, i + 1)
+    elsif value == STRIKE
+      get_raw_score_for_roll(score_sheet, i) +
+        get_raw_score_for_roll(score_sheet, i + 1) +
+        get_raw_score_for_roll(score_sheet, i + 2)
     elsif value == MISS
       0
     else
