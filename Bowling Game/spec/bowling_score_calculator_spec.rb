@@ -128,18 +128,36 @@ describe "BowlingScoreCalculator" do
   end
 end
 
-describe "A game without strikes or spares" do
-  xit "should add up all the numbers as total score" do
-    sheet = "123456"
-    result = BowlingScoreCalculator.get_total_score sheet
-    result.should == 21
-  end
-end
+describe "sample games" do
+	describe "A game without strikes or spares" do
+		it "should add up all the numbers as total score" do
+			sheet = "12345123451234512345"
+			result = BowlingScoreCalculator.get_total_score sheet
+			result.should == 60
+		end
+	end
 
-describe "A game with all strikes" do
-  xit "should have score of 300" do
-    sheet = "XXXXXXXXXXXX"
-    result = BowlingScoreCalculator.get_total_score sheet
-    result.should == 300
-  end
+	describe "A game with all strikes" do
+		it "should have score of 300" do
+			sheet = "XXXXXXXXXXXX"
+			result = BowlingScoreCalculator.get_total_score sheet
+			result.should == 300
+		end
+	end
+
+	describe "A game brokes player's heart" do
+		it "should have score of 90" do
+			sheet = "9-9-9-9-9-9-9-9-9-9-"
+			result = BowlingScoreCalculator.get_total_score sheet
+			result.should == 90
+		end
+	end
+
+	describe "A game with all spares" do
+		it "should have score of 150" do
+			sheet = "5/5/5/5/5/5/5/5/5/5/5"
+			result = BowlingScoreCalculator.get_total_score sheet
+			result.should == 150
+		end
+	end
 end
