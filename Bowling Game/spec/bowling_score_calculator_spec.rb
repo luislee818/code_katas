@@ -1,57 +1,4 @@
-class BowlingScoreCalculator
-  STRIKE = 'X'
-	SPARE = '/'
-	MISS = '-'
-	NON_BONUS_ROLLS_COUNT = 3
-
-  def self.get_total_score(score_sheet)
-    i = 0
-    score = 0
-    loop do
-      roll_score = get_roll_score(score_sheet, i)
-      score += roll_score
-      i += 1
-      break if i == score_sheet.size
-    end
-    score
-  end
-
-  def self.get_roll_score(score_sheet, i)
-		if i >= (score_sheet.size - NON_BONUS_ROLLS_COUNT)
-			return get_raw_score_for_roll(score_sheet, i)
-		end
-
-    value = score_sheet[i]
-
-    if value == SPARE
-			get_raw_score_for_roll(score_sheet, i) +
-				get_raw_score_for_roll(score_sheet, i + 1)
-		elsif value == STRIKE
-			get_raw_score_for_roll(score_sheet, i) +
-				get_raw_score_for_roll(score_sheet, i + 1) +
-				get_raw_score_for_roll(score_sheet, i + 2)
-    elsif value == MISS
-      0
-    else
-      value.to_i
-    end
-  end
-
-  def self.get_raw_score_for_roll(score_sheet, i)
-    value = score_sheet[i]
-
-    if value == SPARE
-      previous_value = score_sheet[i - 1]
-      10 - previous_value.to_i
-    elsif value == STRIKE
-      10
-    elsif value == MISS
-      0
-    else
-      value.to_i
-    end
-  end
-end
+require_relative '../bowling_score_calculator'
 
 describe "BowlingScoreCalculator" do
   describe "get_raw_score_for_roll" do
@@ -129,38 +76,38 @@ describe "BowlingScoreCalculator" do
 			end
 		end
   end
-end
 
-describe "sample games" do
-	describe "A game without strikes or spares" do
-		it "should add up all the numbers as total score" do
-			sheet = "12345123451234512345"
-			result = BowlingScoreCalculator.get_total_score sheet
-			result.should == 60
+	describe "get_total_score" do
+		describe "A game without strikes or spares" do
+			it "should add up all the numbers as total score" do
+				sheet = "12345123451234512345"
+				result = BowlingScoreCalculator.get_total_score sheet
+				result.should == 60
+			end
 		end
-	end
 
-	describe "A game with all strikes" do
-		it "should have score of 300" do
-			sheet = "XXXXXXXXXXXX"
-			result = BowlingScoreCalculator.get_total_score sheet
-			result.should == 300
+		describe "A game with all strikes" do
+			it "should have score of 300" do
+				sheet = "XXXXXXXXXXXX"
+				result = BowlingScoreCalculator.get_total_score sheet
+				result.should == 300
+			end
 		end
-	end
 
-	describe "A game brokes player's heart" do
-		it "should have score of 90" do
-			sheet = "9-9-9-9-9-9-9-9-9-9-"
-			result = BowlingScoreCalculator.get_total_score sheet
-			result.should == 90
+		describe "A game brokes player's heart" do
+			it "should have score of 90" do
+				sheet = "9-9-9-9-9-9-9-9-9-9-"
+				result = BowlingScoreCalculator.get_total_score sheet
+				result.should == 90
+			end
 		end
-	end
 
-	describe "A game with all spares" do
-		it "should have score of 150" do
-			sheet = "5/5/5/5/5/5/5/5/5/5/5"
-			result = BowlingScoreCalculator.get_total_score sheet
-			result.should == 150
+		describe "A game with all spares" do
+			it "should have score of 150" do
+				sheet = "5/5/5/5/5/5/5/5/5/5/5"
+				result = BowlingScoreCalculator.get_total_score sheet
+				result.should == 150
+			end
 		end
 	end
 end
