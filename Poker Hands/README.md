@@ -23,3 +23,5 @@ You compare Poker hands by deciding which has the higher rank, according to the 
 If you like, you can read the two hands to be compared from standard input, and write which won to standard output:
 > 2H 3D 5S 9C KD 2C 3H 4S 8C AH
 > Player 2 wins.
+
+See [KataPokerHands](http://codingdojo.org/cgi-bin/wiki.pl?KataPokerHands) on CodingDojo.org.
