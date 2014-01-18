@@ -20,6 +20,10 @@ module PokerHandsKata
       self.new(value_char, SUITS[suit_char])
     end
 
+    def ==(other)
+      (self.suit == other.suit) and (self.value == other.value)
+    end
+
     private
     def initialize(value, suit)
       @value = value
@@ -45,6 +49,26 @@ module PokerHandsKata
         spade_queen = Card.from_string("QS")
         spade_queen.suit.should == Card::SPADE
         spade_queen.value.should == "Q"
+      end
+    end
+
+    describe "equality test with ==" do
+      it "should return false when two cards have different suits" do
+        card_1 = Card.from_string("2S")
+        card_2 = Card.from_string("2C")
+        card_1.should_not == card_2
+      end
+
+      it "should return false when two cards have different values" do
+        card_1 = Card.from_string("2C")
+        card_2 = Card.from_string("TC")
+        card_1.should_not == card_2
+      end
+
+      it "should return true when two cards have the same suit and value" do
+        card_1 = Card.from_string("2C")
+        card_2 = Card.from_string("2C")
+        card_1.should == card_2
       end
     end
   end
