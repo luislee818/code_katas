@@ -1,4 +1,32 @@
 module PokerHandsKata
+  class Hand
+    attr_reader :cards
+
+    def initialize(str)
+      card_str_values = str.split
+      @cards = []
+
+      card_str_values.each do |str_value|
+        @cards << Card.from_string(str_value)
+      end
+    end
+  end
+
+  describe "Hand" do
+    describe "when initialized with a stirng of card values" do
+      it "should have the correct cards" do
+        hand = Hand.new("2H 3D 5S 9C KD")
+        hand.cards.should include(Card.from_string("2H"))
+        hand.cards.should include(Card.from_string("3D"))
+        hand.cards.should include(Card.from_string("5S"))
+        hand.cards.should include(Card.from_string("9C"))
+        hand.cards.should include(Card.from_string("KD"))
+
+        hand.cards.should_not include(Card.from_string("QC"))
+      end
+    end
+  end
+
   class Card
     attr_reader :suit, :value
 
