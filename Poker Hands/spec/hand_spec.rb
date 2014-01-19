@@ -16,19 +16,68 @@ module PokerHandsKata
     describe "when initialized with a stirng of card values" do
       it "should have the correct cards" do
         hand = Hand.new("2H 3D 5S 9C KD")
-        hand.cards.should include(Card.from_string("2H"))
-        hand.cards.should include(Card.from_string("3D"))
-        hand.cards.should include(Card.from_string("5S"))
-        hand.cards.should include(Card.from_string("9C"))
-        hand.cards.should include(Card.from_string("KD"))
+        hand.cards.size.should == 5
 
-        hand.cards.should_not include(Card.from_string("QC"))
+        hand.cards[0].suit.should == Card::HEART
+        hand.cards[0].value.should == "2"
+        hand.cards[1].suit.should == Card::DIAMOND
+        hand.cards[1].value.should == "3"
+        hand.cards[2].suit.should == Card::SPADE
+        hand.cards[2].value.should == "5"
+        hand.cards[3].suit.should == Card::CLUB
+        hand.cards[3].value.should == "9"
+        hand.cards[4].suit.should == Card::DIAMOND
+        hand.cards[4].value.should == "K"
+      end
+    end
+  end
+
+  class HandCategory
+    STRAIGHT_FLUSH = :STRAIGHT_FLUSH
+    FOUR_OF_A_KIND = :FOUR_OF_A_KIND
+
+    attr_reader :category, :highest_value
+
+    def initialize(category, highest_value)
+      @category = category
+      @highest_value = highest_value
+    end
+  end
+
+  class HandAnalyzer
+    def self.analyze(hand)
+      cards = hand.cards
+
+      HandCategory.new(HandCategory::STRAIGHT_FLUSH, 9)
+    end
+  end
+
+  describe "HandAnalyzer" do
+    describe "analyze" do
+      context "StraightFlush" do
+        xit "should return HandCategory instance of StraightFlush and value of largest card" do
+          hand = Hand.new "6C 5C 7C 8C 9C"
+          result = HandAnalyzer.analyze hand
+          result.category.should == HandCategory::STRAIGHT_FLUSH
+          result.highest_value.should == 9
+        end
+      end
+
+      context "FourOfAKind" do
+        xit "should return HandCategory instance of FourOfAKind and value of the card" do
+          hand = Hand.new "7C 8C 7D 7S 7H"
+          result = HandAnalyzer.analyze hand
+          result.category.should == HandCategory::FOUR_OF_A_KIND
+          result.highest_value.should == 7
+        end
       end
     end
   end
 
   class Card
-    attr_reader :suit, :value
+    include Comparable
+
+    attr_reader :suit, :value, :score_value
 
     CLUB = :CLUB
     SPADE = :SPADE
@@ -48,14 +97,23 @@ module PokerHandsKata
       self.new(value_char, SUITS[suit_char])
     end
 
-    def ==(other)
-      (self.suit == other.suit) and (self.value == other.value)
+    def <=>(other)
+      self.score_value <=> other.score_value
     end
 
     private
     def initialize(value, suit)
       @value = value
       @suit = suit
+
+      @score_value = case value
+                     when "A" then 14
+                     when "K" then 13
+                     when "Q" then 12
+                     when "J" then 11
+                     when "T" then 10
+                     else value.to_i
+                     end
     end
   end
 
@@ -65,38 +123,45 @@ module PokerHandsKata
         club_2 = Card.from_string("2C")
         club_2.suit.should == Card::CLUB
         club_2.value.should == "2"
+        club_2.score_value.should == 2
 
         diamond_10 = Card.from_string("TD")
         diamond_10.suit.should == Card::DIAMOND
         diamond_10.value.should == "T"
+        diamond_10.score_value.should == 10
 
         heart_jack = Card.from_string("JH")
         heart_jack.suit.should == Card::HEART
         heart_jack.value.should == "J"
+        heart_jack.score_value.should == 11
 
         spade_queen = Card.from_string("QS")
         spade_queen.suit.should == Card::SPADE
         spade_queen.value.should == "Q"
+        spade_queen.score_value.should == 12
+
+        diamond_king = Card.from_string("KD")
+        diamond_king.suit.should == Card::DIAMOND
+        diamond_king.value.should == "K"
+        diamond_king.score_value.should == 13
+
+        spade_ace = Card.from_string("AS")
+        spade_ace.suit.should == Card::SPADE
+        spade_ace.value.should == "A"
+        spade_ace.score_value.should == 14
       end
     end
 
-    describe "equality test with ==" do
-      it "should return false when two cards have different suits" do
-        card_1 = Card.from_string("2S")
-        card_2 = Card.from_string("2C")
-        card_1.should_not == card_2
-      end
+    describe "comparison" do
+      it "should compare with score_values" do
+        club_2 = Card.from_string("2C")
+        heart_jack = Card.from_string("JH")
+        diamond_jack = Card.from_string("JD")
+        spade_ace = Card.from_string("AS")
 
-      it "should return false when two cards have different values" do
-        card_1 = Card.from_string("2C")
-        card_2 = Card.from_string("TC")
-        card_1.should_not == card_2
-      end
-
-      it "should return true when two cards have the same suit and value" do
-        card_1 = Card.from_string("2C")
-        card_2 = Card.from_string("2C")
-        card_1.should == card_2
+        club_2.should < heart_jack
+        heart_jack.should == diamond_jack
+        spade_ace.should > heart_jack
       end
     end
   end
