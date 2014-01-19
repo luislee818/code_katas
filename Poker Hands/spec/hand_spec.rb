@@ -36,30 +36,68 @@ module PokerHandsKata
     STRAIGHT_FLUSH = :STRAIGHT_FLUSH
     FOUR_OF_A_KIND = :FOUR_OF_A_KIND
 
-    attr_reader :category, :highest_value
+    attr_reader :name, :highest_value
 
-    def initialize(category, highest_value)
-      @category = category
+    def initialize(name, highest_value)
+      @name = name
       @highest_value = highest_value
     end
   end
 
   class HandAnalyzer
     def self.analyze(hand)
-      cards = hand.cards
+      cards = hand.cards.sort
+      categories = []
 
-      HandCategory.new(HandCategory::STRAIGHT_FLUSH, 9)
+      # until cards.empty?
+      #   HandCategoryRules.each do |rule|
+      #     result = rule.check(cards)
+
+      #     unless result.category
+      #       categories << result.category
+      #       cards = result.remaining_cards
+      #       break
+      #     end
+      #   end
+      # end
+
+
+
+      [HandCategory.new(HandCategory::STRAIGHT_FLUSH, 9)]
+    end
+
+    class StraightFlushRule
+      def self.check(cards)
+        matches_rule = true
+
+        (0..(cards.size - 2)).each do |index|
+          current_card = cards[index]
+          next_card = cards[index + 1]
+
+          unless (current_card.score_value + 1 == next_card.score_value) and
+            (current_card.suit == next_card.suit)
+            matches_rule = false
+            break
+          end
+        end
+
+        if matches_rule
+          highest_card_value = cards[-1].value
+          HandCategory.new(HandCategory::STRAIGHT_FLUSH, highest_card_value)
+        end
+      end
     end
   end
 
   describe "HandAnalyzer" do
     describe "analyze" do
       context "StraightFlush" do
-        xit "should return HandCategory instance of StraightFlush and value of largest card" do
+        it "should return HandCategory instance of StraightFlush and value of largest card" do
           hand = Hand.new "6C 5C 7C 8C 9C"
-          result = HandAnalyzer.analyze hand
-          result.category.should == HandCategory::STRAIGHT_FLUSH
-          result.highest_value.should == 9
+          categories = HandAnalyzer.analyze hand
+          categories.size.should == 1
+          categories[0].name.should == HandCategory::STRAIGHT_FLUSH
+          categories[0].highest_value.should == 9
         end
       end
 
@@ -69,6 +107,39 @@ module PokerHandsKata
           result = HandAnalyzer.analyze hand
           result.category.should == HandCategory::FOUR_OF_A_KIND
           result.highest_value.should == 7
+        end
+      end
+    end
+  end
+
+  describe "category rules" do
+    describe "StraightFlushRule" do
+      describe "check" do
+        it "should return a HandCategory instance of straight flush if matches" do
+          card1 = Card.from_string "5C"
+          card2 = Card.from_string "6C"
+          card3 = Card.from_string "7C"
+          card4 = Card.from_string "8C"
+          card5 = Card.from_string "9C"
+
+          cards = [card1, card2, card3, card4, card5]
+
+          category = HandAnalyzer::StraightFlushRule.check cards
+          category.name.should == HandCategory::STRAIGHT_FLUSH
+          category.highest_value.should == "9"
+        end
+
+        it "should return nil if doesn't match" do
+          card1 = Card.from_string "5C"
+          card2 = Card.from_string "6D"
+          card3 = Card.from_string "TC"
+          card4 = Card.from_string "JC"
+          card5 = Card.from_string "AC"
+
+          cards = [card1, card2, card3, card4, card5]
+
+          category = HandAnalyzer::StraightFlushRule.check cards
+          category.should be nil
         end
       end
     end
