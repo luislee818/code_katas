@@ -1,6 +1,7 @@
 require_relative '../lib/hand'
 require_relative '../lib/card'
 require_relative '../lib/hand_analyzer'
+require_relative '../lib/hand_category'
 
 module PokerHandsKata
   describe "HandAnalyzer" do
