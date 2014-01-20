@@ -30,18 +30,21 @@ module PokerHandsKata
   describe "category rules" do
     describe "StraightFlushRule" do
       describe "check" do
-        it "should return a HandCategory instance of straight flush if matches" do
-          card1 = Card.from_string "5C"
-          card2 = Card.from_string "6C"
-          card3 = Card.from_string "7C"
-          card4 = Card.from_string "8C"
-          card5 = Card.from_string "9C"
+        context "5 cards of straight flush" do
+          it "should return an AnalysisResult object with HandCategory being straight flush and remaining cards of empty array" do
+            card1 = Card.from_string "5C"
+            card2 = Card.from_string "6C"
+            card3 = Card.from_string "7C"
+            card4 = Card.from_string "8C"
+            card5 = Card.from_string "9C"
 
-          cards = [card1, card2, card3, card4, card5]
+            cards = [card1, card2, card3, card4, card5]
 
-          category = HandAnalyzer::StraightFlushRule.check cards
-          category.name.should == HandCategory::STRAIGHT_FLUSH
-          category.highest_value.should == "9"
+            result = HandAnalyzer::StraightFlushRule.check cards
+            result.category.name.should == HandCategory::STRAIGHT_FLUSH
+            result.category.highest_value.should == "9"
+            result.remaining_cards.should == []
+          end
         end
 
         it "should return nil if doesn't match" do

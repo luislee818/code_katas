@@ -36,16 +36,23 @@ module PokerHandsKata
       end
     end
 
-    describe "comparison" do
-      it "should compare with score_values" do
-        club_2 = Card.from_string("2C")
-        heart_jack = Card.from_string("JH")
-        diamond_jack = Card.from_string("JD")
-        spade_ace = Card.from_string("AS")
+    describe "equality test with ==" do
+      it "should return false when two cards have different suits" do
+        card_1 = Card.from_string("2S")
+        card_2 = Card.from_string("2C")
+        card_1.should_not == card_2
+      end
 
-        club_2.should < heart_jack
-        heart_jack.should == diamond_jack
-        spade_ace.should > heart_jack
+      it "should return false when two cards have different values" do
+        card_1 = Card.from_string("2C")
+        card_2 = Card.from_string("TC")
+        card_1.should_not == card_2
+      end
+
+      it "should return true when two cards have the same suit and value" do
+        card_1 = Card.from_string("2C")
+        card_2 = Card.from_string("2C")
+        card_1.should == card_2
       end
     end
   end

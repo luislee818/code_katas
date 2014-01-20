@@ -1,7 +1,10 @@
 module PokerHandsKata
   class HandAnalyzer
     def self.analyze(hand)
-      cards = hand.cards.sort
+      cards = hand.cards.sort do |c1, c2|
+        c1.value <=> c2.value
+      end
+
       categories = []
 
       # until cards.empty?

@@ -22,8 +22,8 @@ module PokerHandsKata
       self.new(value_char, SUITS[suit_char])
     end
 
-    def <=>(other)
-      self.score_value <=> other.score_value
+    def ==(other)
+      (self.suit == other.suit) and (self.value == other.value)
     end
 
     private
