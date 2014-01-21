@@ -106,5 +106,30 @@ module PokerHandsKata
         end
       end
     end
+
+    class StraightRule
+      def self.check(cards)
+        return nil unless (cards.size == 5)
+
+        matches_rule = true
+
+        (0..(cards.size - 2)).each do |index|
+          current_card = cards[index]
+          next_card = cards[index + 1]
+
+          unless (current_card.score_value + 1 == next_card.score_value)
+            matches_rule = false
+            break
+          end
+        end
+
+        if matches_rule
+          highest_card_value = cards[-1].value
+          category = HandCategory.new(HandCategory::STRAIGHT, highest_card_value)
+          remaining_cards = []
+          HandAnalysisResult.new(category, remaining_cards)
+        end
+      end
+    end
   end
 end

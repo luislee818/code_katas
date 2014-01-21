@@ -177,5 +177,55 @@ module PokerHandsKata
         end
       end
     end
+
+    describe "StraightRule" do
+      describe "check" do
+        context "5 cards with consecutive numbers" do
+          it "should return a HandAnalysisResult object with HandCategory being straight and remaining cards of empty array" do
+            card1 = Card.from_string "7C"
+            card2 = Card.from_string "8D"
+            card3 = Card.from_string "9H"
+            card4 = Card.from_string "TD"
+            card5 = Card.from_string "JD"
+
+            cards = [card1, card2, card3, card4, card5]
+
+            result = HandAnalyzer::StraightRule.check cards
+            result.category.name.should == HandCategory::STRAIGHT
+            result.category.highest_value.should == "J"
+            result.remaining_cards.should == []
+          end
+        end
+
+        context "5 cards not with consecutive numbers" do
+          it "should return nil" do
+            card1 = Card.from_string "7C"
+            card2 = Card.from_string "8D"
+            card3 = Card.from_string "9H"
+            card4 = Card.from_string "TD"
+            card5 = Card.from_string "AD"
+
+            cards = [card1, card2, card3, card4, card5]
+
+            result = HandAnalyzer::StraightRule.check cards
+            result.should be nil
+          end
+        end
+
+        context "card number less than 5" do
+          it "should return nil" do
+            card1 = Card.from_string "7C"
+            card2 = Card.from_string "8D"
+            card3 = Card.from_string "9H"
+            card4 = Card.from_string "TD"
+
+            cards = [card1, card2, card3, card4]
+
+            result = HandAnalyzer::StraightRule.check cards
+            result.should be nil
+          end
+        end
+      end
+    end
   end
 end
