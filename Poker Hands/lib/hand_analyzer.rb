@@ -131,5 +131,35 @@ module PokerHandsKata
         end
       end
     end
+
+    class ThreeOfAKindRule
+      def self.check(cards)
+        found_match = false
+        match_start_index = nil
+        value_of_match = nil
+        matched_cards = []
+
+        (0..(cards.size - 3)).each do |index|
+          first_card = cards[index]
+          second_card = cards[index + 1]
+          third_card = cards[index + 2]
+
+          if (first_card.value == second_card.value) and (second_card.value == third_card.value)
+            found_match = true
+            match_start_index = index
+            value_of_match = first_card.value
+            matched_cards << first_card << second_card << third_card
+            break
+          end
+        end
+
+        if found_match
+          highest_card_value = value_of_match
+          category = HandCategory.new(HandCategory::THREE_OF_A_KIND, highest_card_value)
+          remaining_cards = cards - matched_cards
+          HandAnalysisResult.new(category, remaining_cards)
+        end
+      end
+    end
   end
 end

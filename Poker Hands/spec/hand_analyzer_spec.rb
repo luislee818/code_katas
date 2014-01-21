@@ -227,5 +227,70 @@ module PokerHandsKata
         end
       end
     end
+
+    describe "ThreeOfAKindRule" do
+      describe "check" do
+        context "3 cards with the same value out of 3 cards" do
+          it "should return a HandAnalysisResult object with HandCategory being ThreeOfAKind and remaining cards being an empty array" do
+            card1 = Card.from_string "7C"
+            card2 = Card.from_string "7D"
+            card3 = Card.from_string "7H"
+
+            cards = [card1, card2, card3]
+
+            result = HandAnalyzer::ThreeOfAKindRule.check cards
+            result.category.name.should == HandCategory::THREE_OF_A_KIND
+            result.category.highest_value.should == "7"
+            result.remaining_cards.should == []
+          end
+        end
+
+        context "3 cards with the same value out of more than 3 cards" do
+          it "should return a HandAnalysisResult object with HandCategory being ThreeOfAKind and remaining cards being an empty array" do
+            card1 = Card.from_string "7C"
+            card2 = Card.from_string "7D"
+            card3 = Card.from_string "7H"
+            card4 = Card.from_string "9H"
+            card5 = Card.from_string "JH"
+
+            cards = [card1, card2, card3, card4, card5]
+
+            result = HandAnalyzer::ThreeOfAKindRule.check cards
+            result.category.name.should == HandCategory::THREE_OF_A_KIND
+            result.category.highest_value.should == "7"
+            result.remaining_cards.size.should == 2
+            result.remaining_cards.should include(card4)
+            result.remaining_cards.should include(card5)
+          end
+        end
+
+        context "3 or more cards that do not have three of a kind" do
+          it "should return nil" do
+            card1 = Card.from_string "3C"
+            card2 = Card.from_string "7D"
+            card3 = Card.from_string "7H"
+            card4 = Card.from_string "9H"
+            card5 = Card.from_string "JH"
+
+            cards = [card1, card2, card3, card4, card5]
+
+            result = HandAnalyzer::ThreeOfAKindRule.check cards
+            result.should be nil
+          end
+        end
+
+        context "card number less than 3" do
+          it "should return nil" do
+            card1 = Card.from_string "3C"
+            card2 = Card.from_string "7D"
+
+            cards = [card1, card2]
+
+            result = HandAnalyzer::ThreeOfAKindRule.check cards
+            result.should be nil
+          end
+        end
+      end
+    end
   end
 end

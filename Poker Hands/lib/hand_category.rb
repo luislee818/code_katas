@@ -4,6 +4,7 @@ module PokerHandsKata
     FOUR_OF_A_KIND = :FOUR_OF_A_KIND
     FLUSH = :FLUSH
     STRAIGHT = :STRAIGHT
+    THREE_OF_A_KIND = :THREE_OF_A_KIND
 
     attr_reader :name, :highest_value
 
