@@ -23,17 +23,17 @@ module PokerHandsKata
       describe "check" do
         context "5 cards of straight flush" do
           it "should return a HandAnalysisResult object with HandCategory being straight flush and remaining cards of empty array" do
-            card1 = Card.from_string "5C"
-            card2 = Card.from_string "6C"
-            card3 = Card.from_string "7C"
-            card4 = Card.from_string "8C"
-            card5 = Card.from_string "9C"
+            card1 = Card.from_string "7C"
+            card2 = Card.from_string "8C"
+            card3 = Card.from_string "9C"
+            card4 = Card.from_string "TC"
+            card5 = Card.from_string "JC"
 
             cards = [card1, card2, card3, card4, card5]
 
             result = HandAnalyzer::StraightFlushRule.check cards
             result.category.name.should == HandCategory::STRAIGHT_FLUSH
-            result.category.highest_value.should == "9"
+            result.category.highest_value.should == "J"
             result.remaining_cards.should == []
           end
         end
