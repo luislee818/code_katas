@@ -2,6 +2,7 @@ module PokerHandsKata
   class HandCategory
     STRAIGHT_FLUSH = :STRAIGHT_FLUSH
     FOUR_OF_A_KIND = :FOUR_OF_A_KIND
+    FLUSH = :FLUSH
 
     attr_reader :name, :highest_value
 

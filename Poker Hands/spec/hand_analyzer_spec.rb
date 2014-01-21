@@ -15,15 +15,6 @@ module PokerHandsKata
           categories[0].highest_value.should == 9
         end
       end
-
-      context "FourOfAKind" do
-        xit "should return HandCategory instance of FourOfAKind and value of the card" do
-          hand = Hand.new "7C 8C 7D 7S 7H"
-          result = HandAnalyzer.analyze hand
-          result.category.should == HandCategory::FOUR_OF_A_KIND
-          result.highest_value.should == 7
-        end
-      end
     end
   end
 
@@ -31,7 +22,7 @@ module PokerHandsKata
     describe "StraightFlushRule" do
       describe "check" do
         context "5 cards of straight flush" do
-          it "should return an AnalysisResult object with HandCategory being straight flush and remaining cards of empty array" do
+          it "should return a HandAnalysisResult object with HandCategory being straight flush and remaining cards of empty array" do
             card1 = Card.from_string "5C"
             card2 = Card.from_string "6C"
             card3 = Card.from_string "7C"
@@ -47,17 +38,142 @@ module PokerHandsKata
           end
         end
 
-        it "should return nil if doesn't match" do
-          card1 = Card.from_string "5C"
-          card2 = Card.from_string "6D"
-          card3 = Card.from_string "TC"
-          card4 = Card.from_string "JC"
-          card5 = Card.from_string "AC"
+        context "cards are not straight flush" do
+          it "should return nil" do
+            card1 = Card.from_string "5C"
+            card2 = Card.from_string "6D"
+            card3 = Card.from_string "TC"
+            card4 = Card.from_string "JC"
+            card5 = Card.from_string "AC"
 
-          cards = [card1, card2, card3, card4, card5]
+            cards = [card1, card2, card3, card4, card5]
 
-          category = HandAnalyzer::StraightFlushRule.check cards
-          category.should be nil
+            result = HandAnalyzer::StraightFlushRule.check cards
+            result.should be nil
+          end
+        end
+
+        context "card number less than 5" do
+          it "should return nil" do
+            card1 = Card.from_string "5C"
+            card2 = Card.from_string "6C"
+            card3 = Card.from_string "7C"
+            card4 = Card.from_string "8C"
+
+            cards = [card1, card2, card3, card4]
+
+            result = HandAnalyzer::StraightFlushRule.check cards
+            result.should be nil
+          end
+        end
+      end
+    end
+
+    describe "FourOfAKindRule" do
+      describe "check" do
+        context "there are 4 cards of one kind" do
+          it "should return a HandAnalysisResult object with HandCategory being four of a kind and remaining cards of the other one" do
+            card1 = Card.from_string "6D"
+            card2 = Card.from_string "6C"
+            card3 = Card.from_string "6H"
+            card4 = Card.from_string "6S"
+            card5 = Card.from_string "AC"
+
+            cards = [card1, card2, card3, card4, card5]
+
+            result = HandAnalyzer::FourOfAKindRule.check cards
+            result.category.name.should == HandCategory::FOUR_OF_A_KIND
+            result.category.highest_value.should == "6"
+            result.remaining_cards.size.should == 1
+            result.remaining_cards.should include(card5)
+          end
+        end
+
+        context "cards are not four of a kind" do
+          it "should return nil" do
+            card1 = Card.from_string "6D"
+            card2 = Card.from_string "6C"
+            card3 = Card.from_string "6H"
+            card4 = Card.from_string "7S"
+            card5 = Card.from_string "AC"
+
+            cards = [card1, card2, card3, card4, card5]
+
+            result = HandAnalyzer::FourOfAKindRule.check cards
+            result.should be nil
+          end
+        end
+      end
+    end
+
+    describe "FullHouseRule" do
+      describe "check" do
+        context "there are 3 cards of the same value, with the remaining 2 cards forming a pair" do
+          # TODO: after implementing ThreeOfAKind and Pair
+          xit "should return a HandAnalysisResult object with HandCategory being full house and remaining cards of empty array" do
+            card1 = Card.from_string "6D"
+            card2 = Card.from_string "6C"
+            card3 = Card.from_string "6H"
+            card4 = Card.from_string "AS"
+            card5 = Card.from_string "AC"
+
+            cards = [card1, card2, card3, card4, card5]
+
+            result = HandAnalyzer::FullHouseRule.check cards
+            result.category.name.should == HandCategory::FULL_HOUSE
+            result.category.highest_value.should == "6"
+            result.remaining_cards.should == []
+          end
+        end
+      end
+    end
+
+    describe "FlushRule" do
+      describe "check" do
+        context "5 cards of the same suit" do
+          it "should return a HandAnalysisResult object with HandCategory being flush and remaining cards of empty array" do
+            card1 = Card.from_string "6D"
+            card2 = Card.from_string "6D"
+            card3 = Card.from_string "9D"
+            card4 = Card.from_string "JD"
+            card5 = Card.from_string "AD"
+
+            cards = [card1, card2, card3, card4, card5]
+
+            result = HandAnalyzer::FlushRule.check cards
+            result.category.name.should == HandCategory::FLUSH
+            result.category.highest_value.should == "A"
+            result.remaining_cards.should == []
+          end
+        end
+
+        context "5 cards are not the same suit" do
+          it "should return nil" do
+            card1 = Card.from_string "6D"
+            card2 = Card.from_string "6D"
+            card3 = Card.from_string "9S"
+            card4 = Card.from_string "JD"
+            card5 = Card.from_string "AD"
+
+            cards = [card1, card2, card3, card4, card5]
+
+            result = HandAnalyzer::FlushRule.check cards
+            result.should be nil
+          end
+        end
+
+        context "card number less than 5" do
+          it "should return nil" do
+            card1 = Card.from_string "6D"
+            card2 = Card.from_string "6D"
+            card3 = Card.from_string "9D"
+            card4 = Card.from_string "AD"
+
+            cards = [card1, card2, card3, card4]
+
+            result = HandAnalyzer::FlushRule.check cards
+            result.should be nil
+          end
         end
       end
     end
