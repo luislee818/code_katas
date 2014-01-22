@@ -10,11 +10,24 @@ module PokerHandsKata
     PAIR = :PAIR
     HIGH_CARD = :HIGH_CARD
 
-    attr_reader :name, :highest_value
+    CATEGORY_SCORE_VALUES = {
+      STRAIGHT_FLUSH: 9,
+      FOUR_OF_A_KIND: 8,
+      FULL_HOUSE: 7,
+      FLUSH: 6,
+      STRAIGHT: 5,
+      THREE_OF_A_KIND: 4,
+      TWO_PAIRS: 3,
+      PAIR: 2,
+      HIGH_CARD: 1
+    }
+
+    attr_reader :name, :highest_value, :score_value
 
     def initialize(name, highest_value)
       @name = name
       @highest_value = highest_value
+      @score_value = CATEGORY_SCORE_VALUES[name]
     end
   end
 end

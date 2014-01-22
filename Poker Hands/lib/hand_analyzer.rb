@@ -42,7 +42,26 @@ module PokerHandsKata
     end
 
     def self.compare(left_categories, right_categories)
-      true
+      loop do
+        left_category = left_categories.shift
+        right_category = right_categories.shift
+
+        if left_category.nil? and right_category.nil?
+          return 0
+        elsif left_category.nil?
+          return -1
+        elsif right_category.nil?
+          return 1
+        else
+          score_value_comparison = left_category.score_value <=> right_category.score_value
+
+          if score_value_comparison == 0
+            next
+          else
+            return score_value_comparison
+          end
+        end
+      end
     end
   end
 end

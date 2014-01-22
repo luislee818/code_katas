@@ -124,23 +124,103 @@ module PokerHandsKata
     describe "compare" do
       context "categories of left hand is larger than categories of right hand" do
         context "comparing straight flush to four of a kind" do
-          it "should return true" do
+          it "should return 1" do
             left_categories = HandAnalyzer.analyze straight_flush_hand
             right_categories = HandAnalyzer.analyze four_of_a_kind_hand
 
             result = HandAnalyzer.compare(left_categories, right_categories)
-            result.should be true
+            result.should == 1
+          end
+        end
+
+        context "comparing four of a kind to full house" do
+          it "should return 1" do
+            left_categories = HandAnalyzer.analyze four_of_a_kind_hand
+            right_categories = HandAnalyzer.analyze full_house_hand
+
+            result = HandAnalyzer.compare(left_categories, right_categories)
+            result.should == 1
+          end
+        end
+
+        context "comparing full house to flush" do
+          it "should return 1" do
+            left_categories = HandAnalyzer.analyze full_house_hand
+            right_categories = HandAnalyzer.analyze flush_hand
+
+            result = HandAnalyzer.compare(left_categories, right_categories)
+            result.should == 1
+          end
+        end
+
+        context "comparing flush to straight" do
+          it "should return 1" do
+            left_categories = HandAnalyzer.analyze flush_hand
+            right_categories = HandAnalyzer.analyze straight_hand
+
+            result = HandAnalyzer.compare(left_categories, right_categories)
+            result.should == 1
+          end
+        end
+
+        context "comparing straight to three of a kind" do
+          it "should return 1" do
+            left_categories = HandAnalyzer.analyze straight_hand
+            right_categories = HandAnalyzer.analyze three_of_a_kind_hand
+
+            result = HandAnalyzer.compare(left_categories, right_categories)
+            result.should == 1
+          end
+        end
+
+        context "comparing three of a kind to two pairs" do
+          it "should return 1" do
+            left_categories = HandAnalyzer.analyze three_of_a_kind_hand
+            right_categories = HandAnalyzer.analyze two_pairs_hand
+
+            result = HandAnalyzer.compare(left_categories, right_categories)
+            result.should == 1
+          end
+        end
+
+        context "comparing two pairs to one pair" do
+          it "should return 1" do
+            left_categories = HandAnalyzer.analyze two_pairs_hand
+            right_categories = HandAnalyzer.analyze one_pair_hand
+
+            result = HandAnalyzer.compare(left_categories, right_categories)
+            result.should == 1
+          end
+        end
+
+        context "comparing one pair to all high cards" do
+          it "should return 1" do
+            left_categories = HandAnalyzer.analyze one_pair_hand
+            right_categories = HandAnalyzer.analyze all_high_cards_hand
+
+            result = HandAnalyzer.compare(left_categories, right_categories)
+            result.should == 1
           end
         end
       end
 
       context "categories of left hand is smaller than categories of right hand" do
-        it "should return false" do
+        it "should return -1" do
           left_categories  = HandAnalyzer.analyze four_of_a_kind_hand
           right_categories = HandAnalyzer.analyze straight_flush_hand
 
           result = HandAnalyzer.compare(left_categories, right_categories)
-          result.should be false
+          result.should == -1
+        end
+      end
+
+      context "categories of left hand tie with categories of right hand" do
+        it "should return 0" do
+          left_categories  = HandAnalyzer.analyze four_of_a_kind_hand
+          right_categories = HandAnalyzer.analyze four_of_a_kind_hand
+
+          result = HandAnalyzer.compare(left_categories, right_categories)
+          result.should == 0
         end
       end
     end
