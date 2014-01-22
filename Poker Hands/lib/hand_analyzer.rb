@@ -51,7 +51,7 @@ module PokerHandsKata
         end
 
         if matches_rule
-          highest_card_value = cards[-1].value
+          highest_card_value = cards[-1].score_value
           category = HandCategory.new(HandCategory::STRAIGHT_FLUSH, highest_card_value)
           remaining_cards = []
           HandAnalysisResult.new(category, remaining_cards)
@@ -63,11 +63,11 @@ module PokerHandsKata
       def self.check(cards)
         first_card = cards[0]
         last_card = cards[4]
-        v1 = first_card.value
-        v2 = cards[1].value
-        v3 = cards[2].value
-        v4 = cards[3].value
-        v5 = last_card.value
+        v1 = first_card.score_value
+        v2 = cards[1].score_value
+        v3 = cards[2].score_value
+        v4 = cards[3].score_value
+        v5 = last_card.score_value
 
         first_four_matches = ((v1 == v2) and (v2 == v3) and (v3 == v4))
         last_four_matches = ((v2 == v3) and (v3 == v4) and (v4 == v5))
@@ -99,7 +99,7 @@ module PokerHandsKata
         same_suit = ((s1 == s2) and (s2 == s3) and (s3 == s4) and (s4 == s5))
 
         if same_suit
-          highest_card_value = cards[-1].value
+          highest_card_value = cards[-1].score_value
           category = HandCategory.new(HandCategory::FLUSH, highest_card_value)
           remaining_cards = []
           HandAnalysisResult.new(category, remaining_cards)
@@ -124,7 +124,7 @@ module PokerHandsKata
         end
 
         if matches_rule
-          highest_card_value = cards[-1].value
+          highest_card_value = cards[-1].score_value
           category = HandCategory.new(HandCategory::STRAIGHT, highest_card_value)
           remaining_cards = []
           HandAnalysisResult.new(category, remaining_cards)
@@ -147,7 +147,7 @@ module PokerHandsKata
           if (first_card.value == second_card.value) and (second_card.value == third_card.value)
             found_match = true
             match_start_index = index
-            value_of_match = first_card.value
+            value_of_match = first_card.score_value
             matched_cards << first_card << second_card << third_card
             break
           end
@@ -156,6 +156,57 @@ module PokerHandsKata
         if found_match
           highest_card_value = value_of_match
           category = HandCategory.new(HandCategory::THREE_OF_A_KIND, highest_card_value)
+          remaining_cards = cards - matched_cards
+          HandAnalysisResult.new(category, remaining_cards)
+        end
+      end
+    end
+
+    class TwoPairsRule
+      PAIR_TWO_MULTIPLIER = 100
+
+      def self.check(cards)
+        result1 = PairRule.check cards
+        return nil unless result1
+
+        pair1_value = result1.category.highest_value
+        remaining_cards = result1.remaining_cards
+        result2 = PairRule.check remaining_cards
+
+        return nil unless result2
+
+        pair2_value = result2.category.highest_value
+        remaining_cards = result2.remaining_cards
+
+        highest_card_value = pair2_value * PAIR_TWO_MULTIPLIER + pair1_value
+        category = HandCategory.new(HandCategory::TWO_PAIRS, highest_card_value)
+        HandAnalysisResult.new(category, remaining_cards)
+      end
+    end
+
+    class PairRule
+      def self.check(cards)
+        found_match = false
+        match_start_index = nil
+        value_of_match = nil
+        matched_cards = []
+
+        (0..(cards.size - 2)).each do |index|
+          first_card = cards[index]
+          second_card = cards[index + 1]
+
+          if (first_card.value == second_card.value)
+            found_match = true
+            match_start_index = index
+            value_of_match = first_card.score_value
+            matched_cards << first_card << second_card
+            break
+          end
+        end
+
+        if found_match
+          highest_card_value = value_of_match
+          category = HandCategory.new(HandCategory::PAIR, highest_card_value)
           remaining_cards = cards - matched_cards
           HandAnalysisResult.new(category, remaining_cards)
         end

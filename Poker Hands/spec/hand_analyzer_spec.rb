@@ -33,7 +33,7 @@ module PokerHandsKata
 
             result = HandAnalyzer::StraightFlushRule.check cards
             result.category.name.should == HandCategory::STRAIGHT_FLUSH
-            result.category.highest_value.should == "J"
+            result.category.highest_value.should == 11
             result.remaining_cards.should == []
           end
         end
@@ -83,7 +83,7 @@ module PokerHandsKata
 
             result = HandAnalyzer::FourOfAKindRule.check cards
             result.category.name.should == HandCategory::FOUR_OF_A_KIND
-            result.category.highest_value.should == "6"
+            result.category.highest_value.should == 6
             result.remaining_cards.size.should == 1
             result.remaining_cards.should include(card5)
           end
@@ -121,7 +121,7 @@ module PokerHandsKata
 
             result = HandAnalyzer::FullHouseRule.check cards
             result.category.name.should == HandCategory::FULL_HOUSE
-            result.category.highest_value.should == "6"
+            result.category.highest_value.should == 6
             result.remaining_cards.should == []
           end
         end
@@ -142,7 +142,7 @@ module PokerHandsKata
 
             result = HandAnalyzer::FlushRule.check cards
             result.category.name.should == HandCategory::FLUSH
-            result.category.highest_value.should == "A"
+            result.category.highest_value.should == 14
             result.remaining_cards.should == []
           end
         end
@@ -192,7 +192,7 @@ module PokerHandsKata
 
             result = HandAnalyzer::StraightRule.check cards
             result.category.name.should == HandCategory::STRAIGHT
-            result.category.highest_value.should == "J"
+            result.category.highest_value.should == 11
             result.remaining_cards.should == []
           end
         end
@@ -240,7 +240,7 @@ module PokerHandsKata
 
             result = HandAnalyzer::ThreeOfAKindRule.check cards
             result.category.name.should == HandCategory::THREE_OF_A_KIND
-            result.category.highest_value.should == "7"
+            result.category.highest_value.should == 7
             result.remaining_cards.should == []
           end
         end
@@ -257,7 +257,7 @@ module PokerHandsKata
 
             result = HandAnalyzer::ThreeOfAKindRule.check cards
             result.category.name.should == HandCategory::THREE_OF_A_KIND
-            result.category.highest_value.should == "7"
+            result.category.highest_value.should == 7
             result.remaining_cards.size.should == 2
             result.remaining_cards.should include(card4)
             result.remaining_cards.should include(card5)
@@ -287,6 +287,110 @@ module PokerHandsKata
             cards = [card1, card2]
 
             result = HandAnalyzer::ThreeOfAKindRule.check cards
+            result.should be nil
+          end
+        end
+      end
+    end
+
+    describe "TwoPairsRule" do
+      describe "check" do
+        context "cards contain two different pairs" do
+          it "should return a HandAnalysisResult object with category being two pairs and appropriate remaining cards" do
+            card1 = Card.from_string "7C"
+            card2 = Card.from_string "7D"
+            card3 = Card.from_string "9H"
+            card4 = Card.from_string "AD"
+            card5 = Card.from_string "AH"
+
+            cards = [card1, card2, card3, card4, card5]
+
+            result = HandAnalyzer::TwoPairsRule.check cards
+            result.category.name.should == HandCategory::TWO_PAIRS
+            result.category.highest_value.should == (14 * 100 + 7)
+            result.remaining_cards.size.should == 1
+            result.remaining_cards.should include(card3)
+          end
+        end
+
+        context "cards do not contain two different pairs" do
+          context "cards contain 1 pair only" do
+            it "should return nil" do
+              card1 = Card.from_string "2C"
+              card2 = Card.from_string "7D"
+              card3 = Card.from_string "7H"
+              card4 = Card.from_string "JD"
+              card5 = Card.from_string "AH"
+
+              cards = [card1, card2, card3, card4, card5]
+
+              result = HandAnalyzer::TwoPairsRule.check cards
+              result.should be nil
+            end
+          end
+
+          context "cards contain no pairs" do
+            it "should return nil" do
+              card1 = Card.from_string "2C"
+              card2 = Card.from_string "5D"
+              card3 = Card.from_string "7H"
+              card4 = Card.from_string "JD"
+              card5 = Card.from_string "AH"
+
+              cards = [card1, card2, card3, card4, card5]
+
+              result = HandAnalyzer::TwoPairsRule.check cards
+              result.should be nil
+            end
+          end
+        end
+      end
+    end
+
+    describe "PairRule" do
+      describe "check" do
+        context "cards contain a pair" do
+          it "should return a HandAnalysisResult object with category being pair and appropriate remaining cards" do
+            card1 = Card.from_string "7C"
+            card2 = Card.from_string "9D"
+            card3 = Card.from_string "9H"
+            card4 = Card.from_string "JD"
+            card5 = Card.from_string "AH"
+
+            cards = [card1, card2, card3, card4, card5]
+
+            result = HandAnalyzer::PairRule.check cards
+            result.category.name.should == HandCategory::PAIR
+            result.category.highest_value.should == 9
+            result.remaining_cards.size.should == 3
+            result.remaining_cards.should include(card1)
+            result.remaining_cards.should include(card4)
+            result.remaining_cards.should include(card5)
+          end
+        end
+
+        context "cards do not contain a pair" do
+          it "should return nil" do
+            card1 = Card.from_string "7C"
+            card2 = Card.from_string "9D"
+            card3 = Card.from_string "TH"
+            card4 = Card.from_string "JD"
+            card5 = Card.from_string "AH"
+
+            cards = [card1, card2, card3, card4, card5]
+
+            result = HandAnalyzer::PairRule.check cards
+            result.should be nil
+          end
+        end
+
+        context "only 1 card" do
+          it "should return nil" do
+            card1 = Card.from_string "7C"
+
+            cards = [card1]
+
+            result = HandAnalyzer::PairRule.check cards
             result.should be nil
           end
         end
