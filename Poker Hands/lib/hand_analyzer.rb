@@ -6,12 +6,22 @@ module PokerHandsKata
     HAND_CATEGORY_RULES = [
       HandAnalysisRules::StraightFlushRule,
       HandAnalysisRules::FourOfAKindRule,
+      HandAnalysisRules::FullHouseRule,
+      HandAnalysisRules::FlushRule,
+      HandAnalysisRules::StraightRule,
+      HandAnalysisRules::ThreeOfAKindRule,
+      HandAnalysisRules::TwoPairsRule,
+      HandAnalysisRules::PairRule,
+      HandAnalysisRules::HighCardRule,
+      HandAnalysisRules::HighCardRule,
+      HandAnalysisRules::HighCardRule,
+      HandAnalysisRules::HighCardRule,
       HandAnalysisRules::HighCardRule
     ]
 
     def self.analyze(hand)
       cards = hand.cards.sort do |c1, c2|
-        c1.value <=> c2.value
+        c1.score_value <=> c2.score_value
       end
 
       categories = []
