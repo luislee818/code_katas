@@ -40,5 +40,9 @@ module PokerHandsKata
 
       categories
     end
+
+    def self.compare(left_categories, right_categories)
+      true
+    end
   end
 end

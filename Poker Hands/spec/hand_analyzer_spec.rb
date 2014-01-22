@@ -120,5 +120,29 @@ module PokerHandsKata
         end
       end
     end
+
+    describe "compare" do
+      context "categories of left hand is larger than categories of right hand" do
+        context "comparing straight flush to four of a kind" do
+          it "should return true" do
+            left_categories = HandAnalyzer.analyze straight_flush_hand
+            right_categories = HandAnalyzer.analyze four_of_a_kind_hand
+
+            result = HandAnalyzer.compare(left_categories, right_categories)
+            result.should be true
+          end
+        end
+      end
+
+      context "categories of left hand is smaller than categories of right hand" do
+        it "should return false" do
+          left_categories  = HandAnalyzer.analyze four_of_a_kind_hand
+          right_categories = HandAnalyzer.analyze straight_flush_hand
+
+          result = HandAnalyzer.compare(left_categories, right_categories)
+          result.should be false
+        end
+      end
+    end
   end
 end
