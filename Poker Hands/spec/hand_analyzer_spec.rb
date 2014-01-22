@@ -109,8 +109,7 @@ module PokerHandsKata
     describe "FullHouseRule" do
       describe "check" do
         context "there are 3 cards of the same value, with the remaining 2 cards forming a pair" do
-          # TODO: after implementing ThreeOfAKind and Pair
-          xit "should return a HandAnalysisResult object with HandCategory being full house and remaining cards of empty array" do
+          it "should return a HandAnalysisResult object with HandCategory being full house and remaining cards of empty array" do
             card1 = Card.from_string "6D"
             card2 = Card.from_string "6C"
             card3 = Card.from_string "6H"
@@ -121,8 +120,37 @@ module PokerHandsKata
 
             result = HandAnalyzer::FullHouseRule.check cards
             result.category.name.should == HandCategory::FULL_HOUSE
-            result.category.highest_value.should == 6
+            result.category.highest_value.should == 6 * 100 + 14
             result.remaining_cards.should == []
+          end
+        end
+
+        context "5 cards are not full house" do
+          it "should return nil" do
+            card1 = Card.from_string "6D"
+            card2 = Card.from_string "6C"
+            card3 = Card.from_string "8H"
+            card4 = Card.from_string "AS"
+            card5 = Card.from_string "AC"
+
+            cards = [card1, card2, card3, card4, card5]
+
+            result = HandAnalyzer::FullHouseRule.check cards
+            result.should be nil
+          end
+        end
+
+        context "card number less than 5" do
+          it "should return nil" do
+            card1 = Card.from_string "6D"
+            card2 = Card.from_string "6C"
+            card3 = Card.from_string "8H"
+            card4 = Card.from_string "AS"
+
+            cards = [card1, card2, card3, card4]
+
+            result = HandAnalyzer::FullHouseRule.check cards
+            result.should be nil
           end
         end
       end

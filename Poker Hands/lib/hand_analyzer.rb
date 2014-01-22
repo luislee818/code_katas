@@ -82,7 +82,24 @@ module PokerHandsKata
     end
 
     class FullHouseRule
+      THREE_OF_A_KIND_MULTIPLIER = 100
+
       def self.check(cards)
+        threesome_result = ThreeOfAKindRule.check cards
+        return nil unless threesome_result
+
+        threesome_value = threesome_result.category.highest_value
+        remaining_cards = threesome_result.remaining_cards
+        pair_result = PairRule.check remaining_cards
+
+        return nil unless pair_result
+
+        pair_value = pair_result.category.highest_value
+        remaining_cards = pair_result.remaining_cards
+
+        highest_card_value = threesome_value * THREE_OF_A_KIND_MULTIPLIER + pair_value
+        category = HandCategory.new(HandCategory::FULL_HOUSE, highest_card_value)
+        HandAnalysisResult.new(category, remaining_cards)
       end
     end
 
