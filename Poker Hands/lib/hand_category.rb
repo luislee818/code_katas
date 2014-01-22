@@ -8,6 +8,7 @@ module PokerHandsKata
     THREE_OF_A_KIND = :THREE_OF_A_KIND
     TWO_PAIRS = :TWO_PAIRS
     PAIR = :PAIR
+    HIGH_CARD = :HIGH_CARD
 
     attr_reader :name, :highest_value
 

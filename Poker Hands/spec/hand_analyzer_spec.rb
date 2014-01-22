@@ -424,5 +424,39 @@ module PokerHandsKata
         end
       end
     end
+
+    describe "HighCardRule" do
+      describe "check" do
+        context "cards are not empty" do
+          it "should return a HandAnalysisResult object with category being high card and appropriate remaining cards" do
+            card1 = Card.from_string "7C"
+            card2 = Card.from_string "9D"
+            card3 = Card.from_string "TH"
+            card4 = Card.from_string "JD"
+            card5 = Card.from_string "AH"
+
+            cards = [card1, card2, card3, card4, card5]
+
+            result = HandAnalyzer::HighCardRule.check cards
+            result.category.name.should == HandCategory::HIGH_CARD
+            result.category.highest_value.should == 14
+            result.remaining_cards.size.should == 4
+            result.remaining_cards.should include(card1)
+            result.remaining_cards.should include(card2)
+            result.remaining_cards.should include(card3)
+            result.remaining_cards.should include(card4)
+          end
+        end
+
+        context "cards are empty" do
+          it "should return nil" do
+            cards = []
+
+            result = HandAnalyzer::HighCardRule.check cards
+            result.should be nil
+          end
+        end
+      end
+    end
   end
 end

@@ -229,5 +229,16 @@ module PokerHandsKata
         end
       end
     end
+
+    class HighCardRule
+      def self.check(cards)
+        return nil if cards.empty?
+
+        highest_card_value = cards[-1].score_value
+        category = HandCategory.new(HandCategory::HIGH_CARD, highest_card_value)
+        remaining_cards = cards[0..-2]
+        HandAnalysisResult.new(category, remaining_cards)
+      end
+    end
   end
 end
