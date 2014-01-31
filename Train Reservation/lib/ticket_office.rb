@@ -1,3 +1,8 @@
+require_relative 'train_data_service'
+require_relative 'seat_analyzer'
+require_relative 'seat_reservation_service'
+require_relative 'seat_reservation_result'
+
 module TrainReservationKata
   class TicketOffice
     attr_writer :train_data_service, :seat_analyzer, :seat_reservation_service
@@ -19,32 +24,6 @@ module TrainReservationKata
 
     def seat_reservation_service
       @seat_reservation_service || SeatReservationService.new
-    end
-  end
-
-  class SeatReservationResult
-    attr_reader :train_id, :booking_reference, :seats
-
-    def initialize(train_id, booking_reference, seats)
-      @train_id = train_id
-      @booking_reference = booking_reference
-      @seats = seats
-    end
-  end
-
-  class TrainDataService
-    def get_train_data
-    end
-  end
-
-  class SeatAnalyzer
-    def get_available_seats
-      []
-    end
-  end
-
-  class SeatReservationService
-    def reserve_seats
     end
   end
 end
