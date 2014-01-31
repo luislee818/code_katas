@@ -5,6 +5,10 @@ module TrainReservationKata
     def get_train_data
     end
 
+    def get_available_seats
+      []
+    end
+
     private
     def parse_json(json)
       hash = JSON.parse json
